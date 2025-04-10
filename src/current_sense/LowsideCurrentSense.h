@@ -49,6 +49,9 @@ class LowsideCurrentSense: public CurrentSense{
      */
     void calibrateOffsets();
 
+    // make adjustments to phase currents because of offsets for DRV8311 driver
+    void LowsideCurrentSense::adjustPhaseCurrents(PhaseCurrent_s *current);
+
 };
 
 #endif

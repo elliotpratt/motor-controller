@@ -84,6 +84,16 @@ void LowsideCurrentSense::calibrateOffsets(){
     if(_isset(pinC)) offset_ic = offset_ic / calibration_rounds;
 }
 
+// make adjustments to phase currents because of offsets for DRV8311 driver
+void LowsideCurrentSense::adjustPhaseCurrents(PhaseCurrent_s *current){
+    float a_sensed = current->a;
+    float b_sensed = current->b;
+    float c_sensed = current->c;
+    current->a = 1.001152*a_sensed - 0.003375*b_sensed - 0.003103*c_sensed;
+    current->a = 0.002369*a_sensed + 1.000665*b_sensed - 0.019126*c_sensed;
+    current->a = 0.001234*a_sensed + 0.001595*b_sensed + 0.998166*c_sensed;
+}
+
 // read all three phase currents (if possible 2 or 3)
 PhaseCurrent_s LowsideCurrentSense::getPhaseCurrents(){
     PhaseCurrent_s current;
@@ -91,5 +101,6 @@ PhaseCurrent_s LowsideCurrentSense::getPhaseCurrents(){
     current.a = (!_isset(pinA)) ? 0 : (_readADCVoltageLowSide(pinA, params) - offset_ia)*gain_a; // amps
     current.b = (!_isset(pinB)) ? 0 : (_readADCVoltageLowSide(pinB, params) - offset_ib)*gain_b; // amps
     current.c = (!_isset(pinC)) ? 0 : (_readADCVoltageLowSide(pinC, params) - offset_ic)*gain_c; // amps
+    adjustPhaseCurrents(&current); // make DRV8311-specific current adjustments
     return current;
 }
