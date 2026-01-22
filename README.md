@@ -1,2 +1,3 @@
 # motor-controller
-SkyForge Junior Project Spring 2025, motor controller for end effectors and joints
+SkyForge Junior/Senior Project Spring 2025 - Spring 2026  
+Motor controller for end effectors and joints
